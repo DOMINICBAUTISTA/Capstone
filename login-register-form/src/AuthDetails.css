@@ -1,0 +1,16 @@
+.auth-details-container {
+  position: fixed;
+  top: -100%;
+  left: 0;
+  right: 0;
+  height: 50px;
+  background-color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: top 0.5s ease;
+}
+
+.auth-details-container--visible {
+  top: 0;
+}
