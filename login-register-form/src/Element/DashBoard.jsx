@@ -1,61 +1,61 @@
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import React from "react";
+import { Link, useLocation } from "react-router-dom";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCartPlus } from '@fortawesome/free-solid-svg-icons';
+import Logo from "../image/logo.png"
 
 const Dashboard = ({ onLogout }) => {
-  const [searchQuery, setSearchQuery] = useState("");
+  const location = useLocation();
 
   const handleLogout = () => {
     onLogout();
   };
 
-  const handleSearch = (event) => {
-    setSearchQuery(event.target.value);
-    // Perform search or filter results based on searchQuery value
+  // Check if the current location matches the navigation item
+  const isActive = (path) => {
+    return location.pathname === path ? "active" : "";
   };
 
+  // Check if the current location is in section 1
+  const isInSection1 = location.pathname === "/home";
+
   return (
-    <div className="dashboard-container">
-      <h1>Welcome to SuperTarpaulin Printing</h1>
-      <p className="hashtag">SUPER FAST!! SUPER QUALITY!! SUPER BUDGET FRIENDLY!!</p>
-      <nav className="navbar">
-        <ul className="left">
-          <li>
-            <Link to="/" className="nav-link">Home</Link>
-          </li>
-          <li>
-            <Link to="/menu" className="nav-link">Menu</Link>
-          </li>
-          <li>
-            <Link to="/about" className="nav-link">About</Link>
-          </li>
-          <li>
-            <Link to="/service" className="nav-link">Service</Link>
-          </li>
-        </ul>
-        <div className="search-container">
-          <input
-            type="text"
-            placeholder="Search..."
-            value={searchQuery}
-            onChange={handleSearch}
-            className="search-input"
-          />
-        </div>
-        <ul className="right">
-          <li>
-            <Link to="/cart" className="nav-link">
-              <FontAwesomeIcon icon={faCartPlus} />
-              <span className="cart-label">Cart</span>
-            </Link>
-          </li>
-          <li>
-            <button onClick={handleLogout} className="logout-btn">Logout</button>
-          </li>
-        </ul>
-      </nav>
-    </div>
+    <nav className={`navbar ${isInSection1 ? "" : "hidden"}`}>
+      <div className="logo">
+        <img src={Logo} alt="Logo" className="logo"/>
+      </div>
+      <ul className="center">
+        <li>
+          <Link to="/home" className={`nav-link ${isActive("/home")}`}>
+            Home
+          </Link>
+        </li>
+        <li>
+          <Link to="/menu" className={`nav-link ${isActive("/menu")}`}>
+            Menu
+          </Link>
+        </li>
+        <li>
+          <Link to="/about" className={`nav-link ${isActive("/about")}`}>
+            About
+          </Link>
+        </li>
+      </ul>
+
+      <ul className="right">
+        <li>
+          <Link to="/cart" className={`nav-cart ${isActive("/cart")}`}>
+            <FontAwesomeIcon icon={faCartPlus} />
+            <span className="cart-label">Cart</span>
+          </Link>
+        </li>
+        <li>
+          <button onClick={handleLogout} className="logout-btn">
+            Logout
+          </button>
+        </li>
+      </ul>
+    </nav>
   );
 };
 

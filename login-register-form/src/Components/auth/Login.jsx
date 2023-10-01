@@ -1,6 +1,6 @@
 import { signInWithEmailAndPassword } from "firebase/auth";
 import React, { useState } from "react";
-import { auth } from "../../firebase"
+import { auth } from "../../firebase";
 import ForgotPassword from './ForgotPassword';
 import Register from './Register';
 
@@ -25,7 +25,7 @@ export const Login = (props) => {
         if (error.code === 'auth/user-not-found') {
           setErrorMessage('Email Invalid.');
         } else if (error.code === 'auth/wrong-password') {
-          setErrorMessage('Wrong password. Please try again.');
+          setErrorMessage('incorrect Email/Password, Please try again!');
         } else {
           setErrorMessage('An error occurred. Please try again later.');
         }
@@ -46,23 +46,24 @@ export const Login = (props) => {
   const handleRegisterClick = () => {
     setShowLoginForm(false);
     setShowRegisterForm(true);
-  }
+  };
+
 
   return (
-    <div className="auth-form-container">
+    <div className={`auth-form-container ${showLoginForm || showRegisterForm || showForgotPasswordForm? 'active' : ''}`}>
       {showLoginForm && !showRegisterForm && (
         <>
           <h2>Login</h2>
           {errorMessage && <p className="error-message">{errorMessage}</p>}
           <form className="login-form" onSubmit={handleSubmit}>
             <label htmlFor="email">Email</label>
-            <input value={email} onChange={(e) => setEmail(e.target.value)} type="email" placeholder="youremail@gmail.com" id="email" name="email" autoComplete="off" required/>
+            <input value={email} onChange={(e) => setEmail(e.target.value)} type="email" placeholder="youremail@gmail.com" id="email" name="email" autoComplete="off" required />
             <label htmlFor="password">Password</label>
-            <input value={password} onChange={(e) => setPassword(e.target.value)} type="password" placeholder="********" id="password" name="password" autoComplete="off" required/>
-            <button type="submit">Log In</button>
+            <input value={password} onChange={(e) => setPassword(e.target.value)} type="password" placeholder="********" id="password" name="password" autoComplete="off" required />
+            <button className="forgot-btn" onClick={handleForgotPasswordClick}>forgot password?</button>
+            <button type="submit" className="login">LogIn</button>
           </form>
-          <button className="link-btn" onClick={() => handleRegisterClick()}>Don't have an account? Register here.</button>
-          <button className="link-btn" onClick={handleForgotPasswordClick}>Forgot password?</button>
+          <p className="register-here">Don't have an account?<button className="reg-btn" onClick={() => handleRegisterClick()}>Register here.</button></p>
         </>
       )}
       {showRegisterForm && (
@@ -74,4 +75,5 @@ export const Login = (props) => {
     </div>
   );
 };
+
 export default Login;

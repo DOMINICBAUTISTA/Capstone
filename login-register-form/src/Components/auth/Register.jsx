@@ -1,4 +1,4 @@
-import { createUserWithEmailAndPassword } from "firebase/auth";
+import { createUserWithEmailAndPassword, sendEmailVerification } from "firebase/auth";
 import React, { useState } from "react";
 import { auth } from "../../firebase";
 
@@ -14,6 +14,13 @@ export const Register = (props) => {
       .then((userCredential) => {
         console.log(userCredential);
         setIsRegistered(true);
+        sendEmailVerification(auth.currentUser) // Send email verification
+          .then(() => {
+            console.log("Verification email sent.");
+          })
+          .catch((error) => {
+            console.log("Error sending verification email:", error);
+          });
       })
       .catch((error) => {
         switch (error.code) {
@@ -24,7 +31,10 @@ export const Register = (props) => {
             setError({ message: "Invalid email.", hasError: true });
             break;
           case "auth/weak-password":
-            setError({ message: "Password is too weak.", hasError: true });
+            setError({
+              message: "Your Password should be at least 6 characters.",
+              hasError: true,
+            });
             break;
           default:
             setError({
@@ -49,7 +59,11 @@ export const Register = (props) => {
   return (
     <div className="auth-form-container">
       <h2>Create Account</h2>
-      {isRegistered && <p className="success">You have been registered!</p>}
+      {isRegistered && (
+        <p className="success-message">
+          You have been registered! A verification email has been sent to your email address.
+        </p>
+      )}
       {error.hasError && (
         <p className="error" style={{ color: "red" }}>
           {error.message}
@@ -80,14 +94,11 @@ export const Register = (props) => {
           className={error.hasError ? "error" : ""}
           required
         />
-        <button type="submit">Create Account</button>
+        <button type="submit" className="create-account">Create Account</button>
       </form>
-      <button
-        className="link-btn"
-        onClick={() => props.onFormSwitch("login")}
-      >
-        Already have an account? Log in here.
-      </button>
+      <p className="login-here">Already have an account? <button className="back-btn" onClick={() => props.onFormSwitch("login")}>
+        Log in here.
+      </button></p>
     </div>
   );
 };

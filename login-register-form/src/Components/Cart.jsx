@@ -1,7 +1,10 @@
-import React from "react";
-import { Link } from "react-router-dom";
+import React, { useState } from "react";
 
 function Cart({ cartItems, setCartItems }) {
+  const [paymentMethod, setPaymentMethod] = useState(null);
+  const [additionalInfo, setAdditionalInfo] = useState("");
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
   const handleRemoveItem = (itemId) => {
     const newCartItems = cartItems.filter((item) => item.id !== itemId);
     setCartItems(newCartItems);
@@ -29,8 +32,17 @@ function Cart({ cartItems, setCartItems }) {
     setCartItems(newCartItems);
   };
 
+  const handleSelectPaymentMethod = (method) => {
+    setPaymentMethod(method);
+    setIsModalOpen(false);
+  };
+
+  const handleAdditionalInfoChange = (event) => {
+    setAdditionalInfo(event.target.value);
+  };
+
   const handleCheckout = () => {
-    // handle checkout logic here
+    setIsModalOpen(true);
   };
 
   return (
@@ -44,6 +56,7 @@ function Cart({ cartItems, setCartItems }) {
             {cartItems.map((item) => (
               <li key={item.id} className="cart-item-details">
                 <div className="cart-item-name">{item.name}</div>
+                <div className="cart-item-description">{item.description}</div>
                 <div className="cart-item-quantity">
                   <button
                     className="cart-item-quantity-btn"
@@ -78,14 +91,47 @@ function Cart({ cartItems, setCartItems }) {
               0
             )}
           </p>
+          <div className="additional-info">
+            <label htmlFor="additionalInfo">Additional Information:</label>
+            <textarea
+              id="additionalInfo"
+              value={additionalInfo}
+              onChange={handleAdditionalInfoChange}
+            />
+          </div>
           <button className="cart-checkout-btn" onClick={handleCheckout}>
             Checkout
           </button>
+          <div className="payment-method-selection">
+            <h3>Select Payment Method:</h3>
+            <div className="payment-method-btns">
+              <button
+                className={`payment-method-btn ${paymentMethod === "Cash on Delivery" ? "selected" : ""}`}
+                onClick={() => handleSelectPaymentMethod("Cash on Delivery")}
+              >
+                Cash on Delivery
+              </button>
+              <button
+                className={`payment-method-btn ${paymentMethod === "GCash" ? "selected" : ""}`}
+                onClick={() => handleSelectPaymentMethod("GCash")}
+              >
+                GCash
+              </button>
+            </div>
+          </div>
+          {isModalOpen && (
+            <div className="modal">
+              <div className="modal-content">
+                <h3>Select Payment Method:</h3>
+                <button onClick={() => handleSelectPaymentMethod("Cash on Delivery")}>
+                  Cash on Delivery
+                </button>
+                <button onClick={() => handleSelectPaymentMethod("GCash")}>GCash</button>
+              </div>
+            </div>
+          )}
         </div>
       )}
-      <Link to="/" className="back-to-homepage">
-        Back to Homepage
-      </Link>
     </div>
   );
 }

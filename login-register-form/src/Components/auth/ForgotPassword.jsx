@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { auth } from "../../firebase";
-import { getAuth, sendPasswordResetEmail } from "firebase/auth";
+import { sendPasswordResetEmail } from "firebase/auth";
 
 
 const ForgotPassword = ({ onFormSwitch }) => {
@@ -46,7 +46,7 @@ const ForgotPassword = ({ onFormSwitch }) => {
           required
         />
         {emailError && <p className="error-message">{emailError}</p>}
-        <button type="submit">Reset Password</button>
+        <button type="submit" className="reset-btn">Reset</button>
       </form>
       <p className="forgot-password">
         Remember your Password?{" "}

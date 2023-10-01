@@ -6,6 +6,8 @@ import { BrowserRouter as Router, Route, Navigate, Routes } from "react-router-d
 import Dashboard from "./Element/DashBoard";
 import Menu from "./Components/Menu";
 import Cart from "./Components/Cart";
+import About from "./Components/About";
+import Home from "./Components/Home";
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -32,36 +34,85 @@ function App() {
 
   return (
     <div className="App">
-      <AuthDetails />
-      <Router>
-        <Routes>
-          <Route
-            path="/"
-            element={
-              isLoggedIn ? (
-                <Navigate to="/dashboard" />
-              ) : (
-                <Login onLoginSuccess={handleLoginSuccess} />
-              )
-            }
-          />
-          <Route
-            path="/dashboard"
-            element={
-              isLoggedIn ? (
-                <>
-                  {console.log("Rendering dashboard...")}
-                  <Dashboard onLogout={handleLogout} setCartItems={setCartItems} />
-                </>
-              ) : (
-                <Navigate to="/" />
-              )
-            }
-          />
-          <Route path="/menu" element={<Menu onAddToCart={handleAddToCart} />} />
-          <Route path="/cart" element={<Cart cartItems={cartItems} setCartItems={setCartItems} />} />
-        </Routes>
-      </Router>
+      {isLoggedIn && <AuthDetails />}
+      <div className="scroll-container">
+        <Router>
+          {isLoggedIn && <Dashboard onLogout={handleLogout} setCartItems={setCartItems} />}
+          <Routes>
+            <Route
+              path="/"
+              element={
+                  isLoggedIn ? (
+                    <Navigate to="/home" replace />
+                  ) : (
+                    <Login onLoginSuccess={handleLoginSuccess} />
+                  )
+              }
+            />
+            <Route
+              path="/dashboard"
+              element={
+                isLoggedIn ? (
+                  <>
+                    {console.log("Rendering dashboard...")}
+                    <Dashboard onLogout={handleLogout} setCartItems={setCartItems} />
+                  </>
+                ) : (
+                  <Navigate to="/" />
+                )
+              }
+            />
+            <Route
+              path="/menu"
+              element={
+                isLoggedIn ? (
+                  <>
+                    <Menu onAddToCart={handleAddToCart} onLogout={handleLogout} />
+                  </>
+                ) : (
+                  <Navigate to="/" />
+                )
+              }
+            />
+            <Route
+              path="/cart"
+              element={
+                isLoggedIn ? (
+                  <>
+                    <Cart cartItems={cartItems} setCartItems={setCartItems} onLogout={handleLogout} />
+                  </>
+                ) : (
+                  <Navigate to="/" />
+                )
+              }
+            />
+            <Route
+              path="/about"
+              element={
+                isLoggedIn ? (
+                  <>
+                    <About onLogout={handleLogout} />
+                  </>
+                ) : (
+                  <Navigate to="/" />
+                )
+              }
+            />
+            <Route
+              path="/home"
+              element={
+                isLoggedIn ? (
+                  <>
+                    <Home />
+                  </>
+                ) : (
+                  <Navigate to="/" />
+                )
+              }
+            />
+          </Routes>
+        </Router>
+      </div>
     </div>
   );
 }
