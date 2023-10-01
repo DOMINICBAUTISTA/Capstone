@@ -1,18 +1,15 @@
 import "./App.css";
-import Register from "./Components/auth/Register";
 import Login from "./Components/auth/Login";
 import React, { useState } from "react";
-import AuthDetails from "./Components/AuthDetails";
-import { BrowserRouter, Route, Navigate, Routes } from "react-router-dom";
+import AuthDetails from "./Components/auth/AuthDetails";
+import { BrowserRouter as Router, Route, Navigate, Routes } from "react-router-dom";
 import Dashboard from "./Element/DashBoard";
+import Menu from "./Components/Menu";
+import Cart from "./Components/Cart";
 
 function App() {
-  const [currentForm, setCurrentForm] = useState("login");
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-
-  const toggleForm = (formName) => {
-    setCurrentForm(formName);
-  };
+  const [cartItems, setCartItems] = useState([]);
 
   const handleLoginSuccess = () => {
     setIsLoggedIn(true);
@@ -22,10 +19,21 @@ function App() {
     setIsLoggedIn(false);
   };
 
+  const handleAddToCart = (item) => {
+    const index = cartItems.findIndex((cartItem) => cartItem.id === item.id);
+    if (index >= 0) {
+      const newCartItems = [...cartItems];
+      newCartItems[index].quantity += 1;
+      setCartItems(newCartItems);
+    } else {
+      setCartItems([...cartItems, { ...item, quantity: 1 }]);
+    }
+  };
+
   return (
     <div className="App">
       <AuthDetails />
-      <BrowserRouter>
+      <Router>
         <Routes>
           <Route
             path="/"
@@ -33,7 +41,7 @@ function App() {
               isLoggedIn ? (
                 <Navigate to="/dashboard" />
               ) : (
-                <Login onFormSwitch={toggleForm} onLoginSuccess={handleLoginSuccess} />
+                <Login onLoginSuccess={handleLoginSuccess} />
               )
             }
           />
@@ -43,18 +51,19 @@ function App() {
               isLoggedIn ? (
                 <>
                   {console.log("Rendering dashboard...")}
-                  <Dashboard onLogout={handleLogout} />
+                  <Dashboard onLogout={handleLogout} setCartItems={setCartItems} />
                 </>
               ) : (
                 <Navigate to="/" />
               )
             }
           />
+          <Route path="/menu" element={<Menu onAddToCart={handleAddToCart} />} />
+          <Route path="/cart" element={<Cart cartItems={cartItems} setCartItems={setCartItems} />} />
         </Routes>
-      </BrowserRouter>
+      </Router>
     </div>
   );
 }
 
 export default App;
-
