@@ -34,7 +34,7 @@ function App() {
 
   return (
     <div className="App">
-      {isLoggedIn && <AuthDetails />}
+      
       <div className="scroll-container">
         <Router>
           {isLoggedIn && <Dashboard onLogout={handleLogout} setCartItems={setCartItems} />}

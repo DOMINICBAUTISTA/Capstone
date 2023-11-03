@@ -12,7 +12,7 @@ function Menu({ onAddToCart }) {
       occasion: "",
       size: "",
       theme: "",
-      message: ""
+      message: "",
     },
     {
       id: 2,
@@ -21,7 +21,7 @@ function Menu({ onAddToCart }) {
       occasion: "",
       size: "",
       theme: "",
-      message: ""
+      message: "",
     },
     {
       id: 3,
@@ -30,8 +30,8 @@ function Menu({ onAddToCart }) {
       occasion: "",
       size: "",
       theme: "",
-      message: ""
-    }
+      message: "",
+    },
   ];
 
   const [showForm, setShowForm] = useState(false);
