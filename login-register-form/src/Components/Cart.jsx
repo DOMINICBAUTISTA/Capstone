@@ -4,6 +4,7 @@ import GcashPayment from "../GcashPayment"; // Import the GcashPayment component
 function Cart({ cartItems, setCartItems }) {
   const [paymentMethod, setPaymentMethod] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isCODModalOpen, setIsCODModalOpen] = useState(false); // Add state for COD modal
 
   const handleRemoveItem = (itemId) => {
     const newCartItems = cartItems.filter((item) => item.id !== itemId);
@@ -33,8 +34,12 @@ function Cart({ cartItems, setCartItems }) {
   };
 
   const handleSelectPaymentMethod = (method) => {
-    setPaymentMethod(method);
-    setIsModalOpen(false);
+    if (method === "Cash on Delivery") {
+      setIsCODModalOpen(true); // Open the COD setup modal
+    } else {
+      setPaymentMethod(method);
+      setIsModalOpen(false);
+    }
   };
 
   const handleCheckout = () => {
@@ -76,6 +81,30 @@ function Cart({ cartItems, setCartItems }) {
             </div>
           )}
         </div>
+      )}
+
+      {/* Conditionally render the COD setup modal */}
+      {isCODModalOpen && (
+        <div className="modal">
+        <div className="modal-content">
+          <span className="close-button" onClick={() => setIsCODModalOpen(false)}>
+            &times;
+          </span>
+          <h3>Cash on Delivery Setup</h3>
+          <form>
+            <label htmlFor="name">Name:</label>
+            <input type="text" id="name" name="name" required />
+    
+            <label htmlFor="address">Delivery Address:</label>
+            <textarea id="address" name="address" required />
+    
+            <label htmlFor="phone">Phone Number:</label>
+            <input type="tel" id="phone" name="phone" required />
+    
+            <button type="submit">Confirm COD</button>
+          </form>
+        </div>
+      </div>
       )}
 
       {/* Conditionally render GcashPayment component */}

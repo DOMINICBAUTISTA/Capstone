@@ -6,33 +6,44 @@ function GcashPayment() {
 
   const handleGcashPayment = async () => {
     try {
-      const response = await axios.post(
-        "https://api.paymongo.com/v1/payment_intents",
-        {
+      const options = {
+        method: 'POST',
+        url: 'https://api.paymongo.com/v1/payment_intents',
+        headers: {
+          accept: 'application/json',
+          'content-type': 'application/json',
+          authorization: 'Basic c2tfdGVzdF9FdmtjVFJ5dHlwVGhRUTFkeHZqU2hkczI6',
+        },
+        data: {
           data: {
             attributes: {
-              amount: 10000, // Amount in cents (e.g., $100.00)
+              amount: 2000, // Amount in cents (e.g., $20.00)
               payment_method_allowed: ["gcash"],
+              payment_method_options: { card: { request_three_d_secure: 'any' } },
+              currency: 'PHP',
+              capture_type: 'automatic',
             },
           },
         },
-        {
-          headers: {
-            Authorization: "sk_test_EvkcTRytypThQQ1dxvjShds2",
-          },
-        }
-      );
+      };
 
-      const paymentIntentId = response.data.data.id;
-      setPaymentUrl(response.data.data.attributes.redirect);
-    } catch (error) {
-      console.error("Error creating payment:", error);
-    }
-  };
+      axios
+      .request(options)
+      .then(function (response) {
+        console.log(response.data);
+      })
+      .catch(function (error) {
+        console.error(error);
+      });
+          
+        } catch (error) {
+          console.error("Error creating payment:", error);
+        }
+      };
 
   return (
     <div>
-      <button onClick={handleGcashPayment}>Pay with GCash</button>
+      <button onClick={()=> handleGcashPayment()}>Pay with GCash</button>
       {paymentUrl && (
         <a href={paymentUrl} target="_blank" rel="noopener noreferrer">
           Complete your payment
