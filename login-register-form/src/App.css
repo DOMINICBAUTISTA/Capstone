@@ -1137,9 +1137,9 @@ footer {
 }
 
 .modal-content {
-  background-color: #f10000e3;
+  background-color: #000000e3;
   padding: 2rem;
-  max-width: 600px;
+  max-width: 200px;
   border-radius: 4px;
   position: relative;
 }

@@ -1,7 +1,7 @@
 import React, { useState } from "react";
-import Temp1 from "../image/temp1.jpg"
-import Temp2 from "../image/temp2.jpg"
-import Temp3 from "../image/temp3.jpg"
+import Temp1 from "../image/temp1.jpg";
+import Temp2 from "../image/temp2.jpg";
+import Temp3 from "../image/temp3.jpg";
 
 function Menu({ onAddToCart }) {
   const menuItems = [
@@ -13,24 +13,24 @@ function Menu({ onAddToCart }) {
       size: "",
       theme: "",
       message: "",
+      price: 50,
     },
     {
       id: 2,
       name: "Graduation",
       image: Temp2,
-      occasion: "",
       size: "",
-      theme: "",
       message: "",
+      price: 40,
     },
     {
       id: 3,
       name: "Wedding",
       image: Temp3,
-      occasion: "",
       size: "",
       theme: "",
       message: "",
+      price: 60,
     },
   ];
 
@@ -40,25 +40,26 @@ function Menu({ onAddToCart }) {
   const [infoForm, setInfoForm] = useState(false);
   const [showCustomLayoutForm, setShowCustomLayoutForm] = useState(false);
   const [currentStep, setCurrentStep] = useState(1);
-  const [currentInfoStep, setCurrentInfoStep] = useState(1)
+  const [currentInfoStep, setCurrentInfoStep] = useState(1);
 
   const handleInfoForm = (event, itemId) => {
     event.preventDefault();
-  
+
     const selectedItem = menuItems.find((item) => item.id === itemId);
-  
+
     const formData = new FormData(event.target);
     const occasion = formData.get("occasion");
     const size = formData.get("size");
     const theme = formData.get("theme");
-  
+
     selectedItem.occasion = occasion;
     selectedItem.size = size;
     selectedItem.theme = theme;
-  
+
     setInfoForm(true);
     setShowTemplate(false);
   };
+
   const handleHideInfoForm = () => {
     setInfoForm(false);
     setShowTemplate(true);
@@ -94,6 +95,7 @@ function Menu({ onAddToCart }) {
   const handleNextStep = () => {
     setCurrentStep(currentStep + 1);
   };
+
   const handlePreviousInfoStep = () => {
     setCurrentInfoStep(currentInfoStep - 1);
   };
@@ -141,11 +143,12 @@ function Menu({ onAddToCart }) {
             <form key={item.id} onSubmit={(event) => handleInfoForm(event, item.id)}>
               <div>
                 <div className="item-details">
-                  <img src={item.image} alt={item.image} className="item-image" />
+                  <img src={item.image} alt={item.name} className="item-image" />
                   <h3 className="item-name">{item.name}</h3>
+                  <p className="item-price">P{item.price}</p>
                 </div>
                 <div className="item-actions">
-                  <button type="submit" className="select-btn">
+                  <button type="submit" className="select-btn" onClick={() => onAddToCart(item)}>
                     Select
                   </button>
                 </div>

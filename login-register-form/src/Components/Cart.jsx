@@ -1,10 +1,11 @@
 import React, { useState } from "react";
-import GcashPayment from "../GcashPayment"; // Import the GcashPayment component
+import GcashPayment from "../GcashPayment";
+
 
 function Cart({ cartItems, setCartItems }) {
   const [paymentMethod, setPaymentMethod] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [isCODModalOpen, setIsCODModalOpen] = useState(false); // Add state for COD modal
+  const [isCODModalOpen, setIsCODModalOpen] = useState(false);
 
   const handleRemoveItem = (itemId) => {
     const newCartItems = cartItems.filter((item) => item.id !== itemId);
@@ -35,7 +36,7 @@ function Cart({ cartItems, setCartItems }) {
 
   const handleSelectPaymentMethod = (method) => {
     if (method === "Cash on Delivery") {
-      setIsCODModalOpen(true); // Open the COD setup modal
+      setIsCODModalOpen(true);
     } else {
       setPaymentMethod(method);
       setIsModalOpen(false);
@@ -46,10 +47,12 @@ function Cart({ cartItems, setCartItems }) {
     setIsModalOpen(true);
   };
 
-  // Callback function to handle payment confirmation
   const handlePaymentConfirmation = () => {
-    // Handle payment confirmation logic here
-    // You can update the order status, show a confirmation message, etc.
+    console.log("Payment confirmed!");
+  };
+
+  const calculateTotalPrice = () => {
+    return cartItems.reduce((total, item) => total + item.price * item.quantity, 0);
   };
 
   return (
@@ -60,9 +63,20 @@ function Cart({ cartItems, setCartItems }) {
       ) : (
         <div className="cart-items-container">
           <ul className="cart-items-list">
-            {/* ... Cart item rendering code ... */}
+            {cartItems.map((item) => (
+              <li key={item.id}>
+                <span>{item.name}</span>
+                <span>{item.description}</span>
+                <span> P{item.price}</span>
+                <button onClick={() => handleDecreaseQuantity(item.id)}> - </button>
+                <span>{item.quantity}</span>
+                <button onClick={() => handleIncreaseQuantity(item.id)}> + </button>
+                <span>Total: P{item.price * item.quantity}</span>
+                <button onClick={() => handleRemoveItem(item.id)}>Remove</button>
+              </li>
+            ))}
           </ul>
-          {/* ... Cart total and additional info code ... */}
+          <p>Total Price: Php{calculateTotalPrice()}</p>
           <button className="cart-checkout-btn" onClick={handleCheckout}>
             Checkout
           </button>
@@ -76,6 +90,7 @@ function Cart({ cartItems, setCartItems }) {
                 <button onClick={() => handleSelectPaymentMethod("Cash on Delivery")}>
                   Cash on Delivery
                 </button>
+                <p>OR</p>
                 <button onClick={() => handleSelectPaymentMethod("GCash")}>GCash</button>
               </div>
             </div>
@@ -83,32 +98,32 @@ function Cart({ cartItems, setCartItems }) {
         </div>
       )}
 
-      {/* Conditionally render the COD setup modal */}
       {isCODModalOpen && (
         <div className="modal">
-        <div className="modal-content">
-          <span className="close-button" onClick={() => setIsCODModalOpen(false)}>
-            &times;
-          </span>
-          <h3>Cash on Delivery Setup</h3>
-          <form>
-            <label htmlFor="name">Name:</label>
-            <input type="text" id="name" name="name" required />
-    
-            <label htmlFor="address">Delivery Address:</label>
-            <textarea id="address" name="address" required />
-    
-            <label htmlFor="phone">Phone Number:</label>
-            <input type="tel" id="phone" name="phone" required />
-    
-            <button type="submit">Confirm COD</button>
-          </form>
+          <div className="modal-content">
+            <span className="close-button" onClick={() => setIsCODModalOpen(false)}>
+              &times;
+            </span>
+            <h3>Cash on Delivery Setup</h3>
+            <form>
+              <label htmlFor="name">Name:</label>
+              <input type="text" id="name" name="name" required />
+
+              <label htmlFor="address">Delivery Address:</label>
+              <textarea id="address" name="address" required />
+
+              <label htmlFor="phone">Phone Number:</label>
+              <input type="tel" id="phone" name="phone" required />
+
+              <button type="submit">Confirm COD</button>
+            </form>
+          </div>
         </div>
-      </div>
       )}
 
-      {/* Conditionally render GcashPayment component */}
-      {paymentMethod === "GCash" && <GcashPayment onPaymentConfirmation={handlePaymentConfirmation} />}
+      {paymentMethod === "GCash" && (
+        <GcashPayment onPaymentConfirmation={handlePaymentConfirmation} />
+      )}
     </div>
   );
 }
